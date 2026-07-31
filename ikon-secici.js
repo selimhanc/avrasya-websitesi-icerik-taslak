@@ -3,6 +3,16 @@
 
   var ANAHTAR_SECIM = "avrasya_ikon_secimleri";
   var ANAHTAR_LOG = "avrasya_ikon_log";
+  var baslangicKayitlari = {
+    "egitim-projesi.html": "open_book",
+    "kalici-eserler.html": "brick",
+    "kislik-ihtiyaclar.html": "snowflake",
+    "kumanya.html": "package",
+    "kurban-bayrami.html": "cow_face",
+    "nafile-kurban.html": "ewe",
+    "su-kuyusu.html": "droplet",
+    "saglikli-sunnet.html": "syringe"
+  };
   var hedefBag = null;
   var modal = null;
   var grid = null;
@@ -122,9 +132,9 @@
     var kayitlar = secimleriOku();
     var baglar = document.querySelectorAll(".main-nav a");
     for (var i = 0; i < baglar.length; i++) {
-      var bag = baglar[i];
-      var id = kayitlar[bag.getAttribute("href")];
-      if (!id) continue;
+    var bag = baglar[i];
+    var id = kayitlar[bag.getAttribute("href")] || baslangicKayitlari[bag.getAttribute("href")];
+    if (!id) continue;
       var ikon = ikonBul(id);
       if (!ikon) continue;
       var eski = bag.querySelector("svg") || bag.querySelector("i.nav-fa") || bag.querySelector("span.nav-emoji");
