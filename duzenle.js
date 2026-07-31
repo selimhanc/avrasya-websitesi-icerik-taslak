@@ -409,7 +409,83 @@
       });
 
       kapsayici.appendChild(silBtn);
+
+      galeriTasiEkle(kapsayici);
     }
+  }
+
+  function galeriTasiEkle(kapsayici) {
+    var galeri = kapsayici.closest(".gallery");
+    if (!galeri) return;
+
+    var suruklenen = null;
+
+    function galeriSiralamasi() {
+      return Array.prototype.map.call(galeri.querySelectorAll(".gallery figure"), function (f) {
+        var im = f.querySelector("img");
+        var src = im ? im.getAttribute("src") : "";
+        return src ? src.split("/").pop() : "(görsel yok)";
+      }).join(" > ");
+    }
+
+    if (galeri.dataset.surukleme !== "1") {
+      galeri.dataset.surukleme = "1";
+
+      galeri.addEventListener("dragover", function (e) {
+        if (!suruklenen) return;
+        e.preventDefault();
+        var hedef = e.target.closest ? e.target.closest(".gallery figure") : null;
+        Array.prototype.forEach.call(galeri.querySelectorAll(".gallery figure"), function (f) {
+          f.classList.toggle("birakma-noktasi", f === hedef && f !== suruklenen);
+        });
+      });
+
+      galeri.addEventListener("drop", function (e) {
+        if (!suruklenen) return;
+        e.preventDefault();
+        var hedef = e.target.closest ? e.target.closest(".gallery figure") : null;
+        var onceSira = galeriSiralamasi();
+        if (hedef && hedef !== suruklenen) {
+          var rect = hedef.getBoundingClientRect();
+          var once = e.clientY < rect.top + rect.height / 2;
+          if (once) galeri.insertBefore(suruklenen, hedef);
+          else galeri.insertBefore(suruklenen, hedef.nextSibling);
+        }
+        var sonra = galeriSiralamasi();
+        if (onceSira !== sonra) {
+          window.avrasyaDegisiklikKaydet("Galeri • Sıralama", onceSira, sonra);
+        }
+        suruklenen.classList.remove("surukleniyor");
+        Array.prototype.forEach.call(galeri.querySelectorAll(".gallery figure"), function (f) {
+          f.classList.remove("birakma-noktasi");
+        });
+        suruklenen = null;
+      });
+
+      galeri.addEventListener("dragend", function () {
+        if (suruklenen) suruklenen.classList.remove("surukleniyor");
+        Array.prototype.forEach.call(galeri.querySelectorAll(".gallery figure"), function (f) {
+          f.classList.remove("birakma-noktasi");
+        });
+        suruklenen = null;
+      });
+    }
+
+    var tasi = document.createElement("button");
+    tasi.type = "button";
+    tasi.className = "galeri-tasi";
+    tasi.title = "Görseli sürükle";
+    tasi.draggable = true;
+    tasi.innerHTML = ikon('<path d="M9 5h1v1H9V5zm5 0h1v1h-1V5zM9 11h1v1H9v-1zm5 0h1v1h-1v-1zM9 17h1v1H9v-1zm5 0h1v1h-1v-1z"></path>');
+    kapsayici.appendChild(tasi);
+
+    tasi.addEventListener("dragstart", function (e) {
+      if (!modAcik()) { e.preventDefault(); return; }
+      suruklenen = kapsayici;
+      kapsayici.classList.add("surukleniyor");
+      e.dataTransfer.effectAllowed = "move";
+      try { e.dataTransfer.setData("text/plain", "galeri"); } catch (err) {}
+    });
   }
 
   popup.querySelector(".gorsel-popup-kapat").addEventListener("click", popupKapat);
