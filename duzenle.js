@@ -8,6 +8,34 @@
   var elemanlar = Array.prototype.slice.call(document.querySelectorAll(seciciler));
   var kayitlar = [];
 
+  function modAcik() {
+    return document.body.classList.contains("duzenleme-acik");
+  }
+
+  /* ---------- DÜZENLEME MODU AÇ/KAPA ---------- */
+  var modBtn = document.createElement("button");
+  modBtn.type = "button";
+  modBtn.className = "duzen-mod-btn";
+  modBtn.title = "Düzenleme modunu aç veya kapat";
+  modBtn.textContent = "Düzenleme Modu";
+  document.body.appendChild(modBtn);
+
+  function modDegistir() {
+    var acik = document.body.classList.toggle("duzenleme-acik");
+    modBtn.classList.toggle("acik", acik);
+    modBtn.textContent = acik ? "Düzenlemeyi Kapat" : "Düzenleme Modu";
+    elemanlar.forEach(function (el) {
+      el.contentEditable = acik ? "true" : "false";
+    });
+    if (!acik) {
+      panel.classList.remove("acik");
+      document.body.classList.remove("panel-acik");
+      popupKapat();
+    }
+  }
+
+  modBtn.addEventListener("click", modDegistir);
+
   function temizIc(el) {
     var klon = el.cloneNode(true);
     var btn = klon.querySelector(".duzen-kopyala");
@@ -212,6 +240,7 @@
   var popupListe = popup.querySelector(".gorsel-popup-liste");
 
   function popupAc(img) {
+    if (!modAcik()) return;
     hedefImg = img;
     var adaylar = [];
     document.querySelectorAll(".gallery img, .hero-img img, .kart-gorsel img").forEach(function (i) {
@@ -384,7 +413,7 @@
 
   /* ---------- DÜZENLENEBİLİR ÖĞELER ---------- */
   elemanlar.forEach(function (el) {
-    el.setAttribute("contenteditable", "true");
+    el.contentEditable = modAcik() ? "true" : "false";
     el.style.position = "relative";
     el.dataset.ilk = temizIc(el);
 

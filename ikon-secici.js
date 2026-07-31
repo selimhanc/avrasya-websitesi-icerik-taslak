@@ -289,6 +289,7 @@
     if (!ikonEl) return;
     var bag = ikonEl.closest(".main-nav a");
     if (!bag) return;
+    if (!document.body.classList.contains("duzenleme-acik")) return;
     e.preventDefault();
     e.stopPropagation();
     ac(bag);

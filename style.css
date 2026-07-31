@@ -876,6 +876,39 @@ section {
 }
 
 /* ---------- DEĞİŞİKLİK PANELİ ---------- */
+.duzen-mod-btn {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+  padding: 8px 14px;
+  border: 1px solid var(--gri-acik);
+  border-radius: 999px;
+  background: var(--beyaz);
+  color: var(--mavi);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(1, 69, 115, 0.18);
+  transition: background 0.2s, color 0.2s;
+}
+
+.duzen-mod-btn.acik {
+  background: var(--mavi);
+  color: var(--beyaz);
+}
+
+body:not(.duzenleme-acik) .duzen-kopyala,
+body:not(.duzenleme-acik) .eleman-sil,
+body:not(.duzenleme-acik) .gorsel-ata,
+body:not(.duzenleme-acik) .gorsel-sil,
+body:not(.duzenleme-acik) .gorsel-ekle,
+body:not(.duzenleme-acik) .sss-ekle,
+body:not(.duzenleme-acik) .gorsel-popup,
+body:not(.duzenleme-acik) .deg-panel {
+  display: none !important;
+}
+
 body.panel-acik {
   padding-bottom: 45vh;
 }
