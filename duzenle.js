@@ -5,7 +5,7 @@
     ".step h3, .step p, .gallery figcaption, .kart .kart-no, .kart h3, .kart p, .kart .kart-link, " +
     ".sss h2, .sss .giris, .sss-metin, .sss-cevap p, .not, .site-footer h4, .site-footer p";
 
-  var elemanlar = Array.prototype.slice.call(document.querySelectorAll(seciciler));
+  var elemanlar = [];
   var kayitlar = [];
 
   function modAcik() {
@@ -35,6 +35,16 @@
   }
 
   modBtn.addEventListener("click", modDegistir);
+
+  document.addEventListener("click", function (e) {
+    if (!modAcik()) return;
+    var hedef = e.target;
+    if (!hedef || !hedef.closest) return;
+    if (hedef.closest(".kart-ic")) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  });
 
   function temizIc(el) {
     var klon = el.cloneNode(true);
@@ -194,8 +204,16 @@
     return kayitPanoyaEkle(konumEtiketi(el), eski, yeni);
   }
 
+  function sayfaAdresi() {
+    try {
+      return "/" + location.pathname.split("/").pop();
+    } catch (e) {
+      return location.href;
+    }
+  }
+
   function raporMetni() {
-    var metin = "SAYFA: " + location.href + "\n";
+    var metin = "SAYFA: " + sayfaAdresi() + "\n";
     if (!kayitlar.length) {
       return metin + "\n(Değişiklik kaydı yok)";
     }
@@ -217,6 +235,21 @@
     kopyala(raporMetni(), function () {
       geriBildirim(btn, "Kopyalandı!");
     });
+  });
+
+  /* ---------- WHATSAPP PAYLAŞIM ---------- */
+  var waBtn = document.createElement("button");
+  waBtn.type = "button";
+  waBtn.className = "whatsapp-paylas";
+  waBtn.title = "Logları WhatsApp'ta paylaş";
+  waBtn.innerHTML =
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>' +
+    "<span>WhatsApp</span>";
+  panel.querySelector(".deg-panel-baslik").insertBefore(waBtn, panel.querySelector(".deg-hepsi-kopyala"));
+
+  waBtn.addEventListener("click", function () {
+    var metin = "*AVRASYA WEBSİTESİ İÇERİK DÜZENLEME TEKLİFİ*\n\n" + raporMetni();
+    window.open("https://wa.me/905388871803?text=" + encodeURIComponent(metin), "_blank");
   });
 
   /* ---------- GÖRSEL İŞLEMLERİ ---------- */
@@ -241,6 +274,7 @@
 
   function popupAc(img) {
     if (!modAcik()) return;
+    if (img.closest(".kart-gorsel")) return;
     hedefImg = img;
     var adaylar = [];
     document.querySelectorAll(".gallery img, .hero-img img, .kart-gorsel img").forEach(function (i) {
@@ -329,7 +363,7 @@
       e.stopPropagation();
       var metin =
         "SAYFA: " +
-        location.href +
+        sayfaAdresi() +
         "\n\n--- DEĞİŞİKLİK ---\n" +
         "KONUM: " +
         konumEtiketi(img) +
@@ -412,7 +446,8 @@
   });
 
   /* ---------- DÜZENLENEBİLİR ÖĞELER ---------- */
-  elemanlar.forEach(function (el) {
+  function editeBagla(el) {
+    elemanlar.push(el);
     el.contentEditable = modAcik() ? "true" : "false";
     el.style.position = "relative";
     el.dataset.ilk = temizIc(el);
@@ -444,7 +479,7 @@
 
       var metin =
         "SAYFA: " +
-        location.href +
+        sayfaAdresi() +
         "\n\n--- DEĞİŞİKLİK ---\n" +
         "KONUM: " +
         konumEtiketi(el) +
@@ -484,5 +519,150 @@
     });
 
     el.appendChild(silBtn);
-  });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(seciciler), editeBagla);
+
+  /* ---------- PLANLAMA SÜREÇLERİ ---------- */
+  function stepsHazirla(liste) {
+    var ekleBtn = document.createElement("button");
+    ekleBtn.type = "button";
+    ekleBtn.className = "step-ekle";
+    ekleBtn.textContent = "+ Yeni Süreç Ekle";
+    liste.appendChild(ekleBtn);
+
+    function adimlariYenile() {
+      Array.prototype.forEach.call(liste.querySelectorAll(".step"), function (step, i) {
+        var num = step.querySelector(".step-num");
+        if (num) num.textContent = i + 1;
+      });
+    }
+
+    function siralamasi() {
+      return Array.prototype.map.call(liste.querySelectorAll(".step"), function (s) {
+        var h3 = s.querySelector("h3");
+        return h3 ? h3.textContent.trim() : "(başlıksız)";
+      }).join(" > ");
+    }
+
+    function stepBilgi(step) {
+      var h3 = step.querySelector("h3");
+      var p = step.querySelector("p");
+      return (h3 ? h3.textContent.trim() : "") + " — " + (p ? p.textContent.trim() : "");
+    }
+
+    var suruklenen = null;
+
+    function dugmeleri(adim) {
+      var tasi = document.createElement("button");
+      tasi.type = "button";
+      tasi.className = "step-tasi";
+      tasi.title = "Süreci sürükle";
+      tasi.draggable = true;
+      tasi.innerHTML = ikon('<path d="M9 5h1v1H9V5zm5 0h1v1h-1V5zM9 11h1v1H9v-1zm5 0h1v1h-1v-1zM9 17h1v1H9v-1zm5 0h1v1h-1v-1z"></path>');
+      adim.appendChild(tasi);
+
+      tasi.addEventListener("dragstart", function (e) {
+        if (!modAcik()) { e.preventDefault(); return; }
+        suruklenen = adim;
+        adim.classList.add("surukleniyor");
+        e.dataTransfer.effectAllowed = "move";
+        try { e.dataTransfer.setData("text/plain", "step"); } catch (err) {}
+      });
+
+      var sil = document.createElement("button");
+      sil.type = "button";
+      sil.className = "step-sil";
+      sil.title = "Bu süreci sil";
+      sil.innerHTML = ikon(capiIkonu);
+      adim.appendChild(sil);
+
+      sil.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+
+      sil.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var adimlar = liste.querySelectorAll(".step");
+        var idx = Array.prototype.indexOf.call(adimlar, adim) + 1;
+        var eski = stepBilgi(adim);
+        adim.remove();
+        adimlariYenile();
+        window.avrasyaDegisiklikKaydet("Faaliyet Planlaması • Süreç Silindi (" + idx + ")", eski, "(silindi)");
+      });
+    }
+
+    function yeniAdim() {
+      var adim = document.createElement("div");
+      adim.className = "step";
+      adim.innerHTML =
+        '<span class="step-num">' + (liste.querySelectorAll(".step").length + 1) + "</span>" +
+        "<h3>Yeni Süreç Başlığı</h3>" +
+        "<p>Yeni süreç açıklaması buraya yazılır.</p>";
+      var h3 = adim.querySelector("h3");
+      var p = adim.querySelector("p");
+      editeBagla(h3);
+      editeBagla(p);
+      dugmeleri(adim);
+      liste.insertBefore(adim, ekleBtn);
+      return adim;
+    }
+
+    ekleBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!modAcik()) return;
+      var adim = yeniAdim();
+      adimlariYenile();
+      window.avrasyaDegisiklikKaydet("Faaliyet Planlaması • Yeni Süreç", "(yok)", stepBilgi(adim));
+    });
+
+    liste.addEventListener("dragover", function (e) {
+      if (!suruklenen) return;
+      e.preventDefault();
+      var hedef = e.target.closest ? e.target.closest(".step") : null;
+      Array.prototype.forEach.call(liste.querySelectorAll(".step"), function (s) {
+        s.classList.toggle("birakma-noktasi", s === hedef && s !== suruklenen);
+      });
+    });
+
+    liste.addEventListener("drop", function (e) {
+      if (!suruklenen) return;
+      e.preventDefault();
+      var hedef = e.target.closest ? e.target.closest(".step") : null;
+      var onceSirala = siralamasi();
+      if (hedef && hedef !== suruklenen) {
+        var rect = hedef.getBoundingClientRect();
+        var once = e.clientY < rect.top + rect.height / 2;
+        if (once) liste.insertBefore(suruklenen, hedef);
+        else liste.insertBefore(suruklenen, hedef.nextSibling);
+      }
+      adimlariYenile();
+      var sonra = siralamasi();
+      if (onceSirala !== sonra) {
+        window.avrasyaDegisiklikKaydet("Faaliyet Planlaması • Sıralama", onceSirala, sonra);
+      }
+      suruklenen.classList.remove("surukleniyor");
+      Array.prototype.forEach.call(liste.querySelectorAll(".step"), function (s) {
+        s.classList.remove("birakma-noktasi");
+      });
+      suruklenen = null;
+    });
+
+    liste.addEventListener("dragend", function () {
+      if (suruklenen) suruklenen.classList.remove("surukleniyor");
+      Array.prototype.forEach.call(liste.querySelectorAll(".step"), function (s) {
+        s.classList.remove("birakma-noktasi");
+      });
+      suruklenen = null;
+    });
+
+    Array.prototype.forEach.call(liste.querySelectorAll(".step"), function (adim) {
+      dugmeleri(adim);
+    });
+  }
+
+  document.querySelectorAll(".steps").forEach(stepsHazirla);
 })();
