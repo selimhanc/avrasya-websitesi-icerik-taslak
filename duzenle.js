@@ -180,6 +180,10 @@
     return metin;
   }
 
+  window.avrasyaDegisiklikKaydet = function (konum, eski, yeni) {
+    kayitPanoyaEkle(konum, eski, yeni);
+  };
+
   panel.querySelector(".deg-hepsi-kopyala").addEventListener("click", function () {
     var btn = this;
     kopyala(raporMetni(), function () {

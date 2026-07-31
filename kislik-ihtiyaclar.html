@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kışlık İhtiyaçlar – Avrasya Derneği</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="lib/fa/css/fontawesome.min.css">
+  <link rel="stylesheet" href="lib/fa/css/solid.min.css">
+  <link rel="stylesheet" href="lib/fa/css/brands.min.css">
 </head>
 <body>
 
@@ -19,41 +22,48 @@
         <span class="menu-bar"></span>
       </button>
       <nav class="main-nav">
-        <a href="index.html">Faaliyetler</a>
-        <a href="egitim-projesi.html">Eğitim Projesi</a>
-        <a href="kalici-eserler.html">Kalıcı Eserler</a>
-        <a href="kislik-ihtiyaclar.html" class="aktif">Kışlık İhtiyaçlar</a>
-        <a href="kumanya.html">Kumanya</a>
-        <a href="kurban-bayrami.html">Kurban Bayramı</a>
-        <a href="nafile-kurban.html">Nafile Kurban</a>
-        <a href="sicak-yemek.html">Sıcak Yemek</a>
-        <a href="su-kuyusu.html">Su Kuyusu</a>
-        <a href="sunnet-kirve.html">Sünnet-Kirve</a>
+        <a href="index.html"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="2" fill="#014573"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2" fill="#dd8c42"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2" fill="#2e8b57"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2" fill="#3b9cd9"/></svg>Faaliyetler</a>
+        <a href="egitim-projesi.html"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M22 9.5 12 4.5 2 9.5l10 5 10-5z" fill="#3b9cd9"/><path d="M6.5 11.9v3.9c0 1.7 2.5 3 5.5 3s5.5-1.3 5.5-3v-3.9L12 14.6l-5.5-2.7z" fill="#014573"/><path d="M21.3 9.5 12 4.9 2.7 9.5" fill="none" stroke="#ffffff" stroke-width="0.8" opacity="0.6"/></svg>Eğitim Projesi</a>
+        <a href="kalici-eserler.html"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="3.2" y="11" width="2.4" height="9" rx="1.1" fill="#2e8b57"/><rect x="18.4" y="11" width="2.4" height="9" rx="1.1" fill="#2e8b57"/><path d="M12 3c-3.1 0-5.6 2.5-5.6 5.6 0 .8.2 1.6.6 2.3h10c.4-.7.6-1.5.6-2.3C17.6 5.5 15.1 3 12 3z" fill="#0d5c95"/><path d="M5.7 11h12.6c.5 0 .8.5.6 1L17 21H7L5.1 12c-.2-.5.1-1 .6-1z" fill="#dd8c42"/><path d="M10.4 21v-4.4c0-1 .7-1.7 1.6-1.7s1.6.7 1.6 1.7V21h-3.2z" fill="#b5651d"/><circle cx="15.7" cy="2.9" r="1.1" fill="#f5c542"/></svg>Kalıcı Eserler</a>
+        <a href="kislik-ihtiyaclar.html" class="aktif"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><line x1="2.5" y1="12" x2="21.5" y2="12" stroke="#3b9cd9" stroke-width="2.6" stroke-linecap="round"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#3b9cd9" stroke-width="2.6" stroke-linecap="round"/><path d="M20 16.5l-4-4.5 4-4.5" fill="none" stroke="#3b9cd9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 7.5l4 4.5-4 4.5" fill="none" stroke="#3b9cd9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 4l-4 4-4-4" fill="none" stroke="#3b9cd9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 20l4-4 4 4" fill="none" stroke="#3b9cd9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Kışlık İhtiyaçlar</a>
+        <a href="kumanya.html"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="3.5" y="8" width="17" height="12" rx="2" fill="#c98a4b"/><rect x="3.5" y="7.6" width="17" height="2.8" rx="1" fill="#e0a568"/><rect x="10.4" y="8" width="3.2" height="12" fill="#f5e6c8"/></svg>Kumanya</a>
+        <a href="kurban-bayrami.html"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 14.4c-.9 0-1.7.8-1.7 1.7 0 .8.5 1.4 1.2 1.7.6 1.2 1.8 2 3.2 2h6c1.9 0 3.4-1.5 3.4-3.4 0-.5-.1-1-.3-1.4.9-.3 1.5-1.1 1.5-2.1 0-1.2-1-2.2-2.2-2.2-.3 0-.7.1-1 .2-.6-1.6-2.1-2.7-3.9-2.7-2.2 0-4 1.6-4.3 3.7-.3-.1-.7-.1-1-.1-1.2 0-2.2 1-2.2 2.2 0 .3.1.6.2.8z" fill="#fafafa" stroke="#8c939b" stroke-width="1"/><circle cx="17.3" cy="11.9" r="2.9" fill="#8c939b"/><circle cx="18.6" cy="11.1" r="0.55" fill="#ffffff"/><path d="M17.6 9.2l1.3-1.7" stroke="#8c939b" stroke-width="1.2" stroke-linecap="round"/><rect x="6.2" y="19.2" width="1.4" height="2.3" rx="0.7" fill="#8c939b"/><rect x="9.6" y="19.2" width="1.4" height="2.3" rx="0.7" fill="#8c939b"/><rect x="13.4" y="19.2" width="1.4" height="2.3" rx="0.7" fill="#8c939b"/></svg>Kurban Bayramı</a>
+        <a href="nafile-kurban.html"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#e2574c"/><circle cx="9.2" cy="8.8" r="1.3" fill="#f7a89f" opacity="0.7"/></svg>Nafile Kurban</a>
+        <a href="sicak-yemek.html"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><g transform="translate(12 12) scale(1.08 1.15) translate(-12 -12)"><path d="M2.5 12h19v1.5a6.5 6.5 0 0 1-6.5 6.5H9a6.5 6.5 0 0 1-6.5-6.5V12z" fill="#f2a03d"/><path d="M2.5 11.5h19" stroke="#d97f2b" stroke-width="2.2" stroke-linecap="round"/><path d="M8 2.5c0 1-.9 1.4-.9 2.5" stroke="#b0bec5" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M12 1.8c0 1-.9 1.4-.9 2.5" stroke="#b0bec5" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M16 2.5c0 1-.9 1.4-.9 2.5" stroke="#b0bec5" stroke-width="1.8" stroke-linecap="round" fill="none"/></g></svg>Sıcak Yemek</a>
+        <a href="su-kuyusu.html"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 2.5 17.8 8.3a8.2 8.2 0 1 1-11.6 0L12 2.5z" fill="#3b9cd9"/><circle cx="9.5" cy="14" r="1.7" fill="#cfeafd" opacity="0.85"/></svg>Su Kuyusu</a>
+        <a href="saglikli-sunnet.html"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#fafafa" stroke="#e2574c" stroke-width="1.4"/><path d="M12 8v8M8 12h8" stroke="#e2574c" stroke-width="2.4" stroke-linecap="round"/></svg>Sağlıklı Sünnet</a>
+        <a href="arife-cicekleri.html"><svg class="nav-ikon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><g transform="translate(12 12) scale(1.12) translate(-12 -12)"><path d="M12 3.4c-2.1 0-3.9-.6-5.2-1.2L3.4 4.1l.9 4.9 1.9-.7V17.4C6.2 19.6 7.9 21.3 10.1 21.3H13.9C16.1 21.3 17.8 19.6 17.8 17.4V8.3L19.7 9l.9-4.9L17.2 2.2C15.9 2.8 14.1 3.4 12 3.4z" fill="#3b9cd9"/><path d="M6.8 2.2 12 3.4l5.2-1.2" stroke="#ffffff" stroke-width="1.1" stroke-linecap="round" opacity="0.5" fill="none"/><path d="M6.4 11.9h11.2M6.4 15h11.2" stroke="#0d5c95" stroke-width="1.1" stroke-linecap="round" opacity="0.35"/><path d="M12 6.4 9.6 2.9c-.8.7-1.4 1.6-1.8 2.7l3 2.1z" fill="#eaf4fb"/><path d="M12 6.4 14.4 2.9c.8.7 1.4 1.6 1.8 2.7l-3 2.1z" fill="#eaf4fb"/><rect x="10.5" y="5.8" width="3" height="1.5" rx="0.6" fill="#e2574c"/><path d="M10.8 7.4h2.4l1 9.4c-.5.4-1.1.6-1.7.6h-1c-.6 0-1.2-.2-1.7-.6l1-9.4z" fill="#e2574c"/></g></svg>Arife Çiçekleri</a>
       </nav>
     </div>
   </header>
 
-  <section class="hero">
-    <div class="container">
-      <span class="hero-eyebrow">Avrasya Derneği • Faaliyet Özeti</span>
-      <h1>Kışlık İhtiyaçlar</h1>
-      <p class="hero-text">
-        Kömürden battaniyeye, monttan soba yakıtına uzanan yardımlarla zorlu kış
-        günlerinde ihtiyaç sahibi ailelerin yanında oluyoruz.
-      </p>
-      <div class="hero-metre">
-        <div class="metre">
-          <strong>Isınma</strong>
-          <span>Kömür ve Yakacak</span>
+  <section class="hero" style="--hero-bg: url('medya/kislik-ihtiyac/IMG_5441.JPG');">
+    <div class="container hero-flex">
+      <div class="hero-metin">
+        <span class="hero-eyebrow">Avrasya Derneği • Faaliyet Özeti</span>
+        <h1>Kışlık İhtiyaçlar</h1>
+        <p class="hero-text">
+          Kömürden battaniyeye, monttan soba yakıtına uzanan yardımlarla zorlu kış
+          günlerinde ihtiyaç sahibi ailelerin yanında oluyoruz.
+        </p>
+        <div class="hero-metre">
+          <div class="metre">
+            <strong>Isınma</strong>
+            <span>Kömür ve Yakacak</span>
+          </div>
+          <div class="metre">
+            <strong>Giysi</strong>
+            <span>Mont ve Battaniye</span>
+          </div>
+          <div class="metre">
+            <strong>Kış Boyu</strong>
+            <span>Sürekli Destek</span>
+          </div>
         </div>
-        <div class="metre">
-          <strong>Giysi</strong>
-          <span>Mont ve Battaniye</span>
-        </div>
-        <div class="metre">
-          <strong>Kış Boyu</strong>
-          <span>Sürekli Destek</span>
-        </div>
+      </div>
+      <div class="hero-img">
+        <img src="medya/kislik-ihtiyac/IMG_5441.JPG" alt="Kışlık ihtiyaç yardımı">
+        <span class="hero-img-kutu">Kışlık ihtiyaç çalışmalarımızdan kareler</span>
       </div>
     </div>
   </section>
@@ -142,10 +152,17 @@
 
     <div class="container">
       <h2>Galeri</h2>
-      <p class="giris">
-        Kışlık ihtiyaç yardımlarının fotoğrafları yakında eklenecektir. Saha
-        çalışmalarımızdan görseller yüklendikçe bu bölüm güncellenecektir.
-      </p>
+      <p class="giris">Kışlık ihtiyaç yardımlarımızdan kareler:</p>
+      <div class="gallery">
+        <figure>
+          <img src="medya/kislik-ihtiyac/IMG_1648.JPG" alt="Kışlık ihtiyaç yardımı">
+          <figcaption>Kışlık yardım hazırlıkları</figcaption>
+        </figure>
+        <figure>
+          <img src="medya/kislik-ihtiyac/IMG_5441.JPG" alt="Kışlık ihtiyaç yardımı">
+          <figcaption>Kışlık ihtiyaç dağıtımı</figcaption>
+        </figure>
+      </div>
       <p class="not">
         Bu sayfa, sahadan yeni fotoğraflar eklendikçe güncellenecektir.
       </p>
@@ -229,5 +246,8 @@
   <script src="menu.js"></script>
   <script src="duzenle.js"></script>
   <script src="faq.js"></script>
+  <script src="iconlar.js"></script>
+  <script src="emojiler.js"></script>
+  <script src="ikon-secici.js"></script>
 </body>
 </html>
