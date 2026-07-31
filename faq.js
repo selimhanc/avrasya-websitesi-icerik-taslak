@@ -47,7 +47,37 @@
     });
   }
 
-  document.querySelectorAll(".sss-soru").forEach(bagla);
+  document.querySelectorAll(".sss-soru").forEach(function (soru) {
+    bagla(soru);
+    silButonuEkle(soru.parentElement);
+  });
+
+  function sssSayisi() {
+    return document.querySelectorAll(".sss-liste .sss-item").length;
+  }
+
+  function silButonuEkle(item) {
+    var sil = document.createElement("button");
+    sil.type = "button";
+    sil.className = "sss-sil";
+    sil.title = "Bu soruyu komple sil";
+    sil.innerHTML =
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>';
+    sil.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var soru = item.querySelector(".sss-metin");
+      var cevap = item.querySelector(".sss-cevap p");
+      var b = soru ? soru.textContent.trim() : "";
+      var a = cevap ? cevap.textContent.trim() : "";
+      item.remove();
+      logaEkle("[" + simdikiZaman() + '] "' + sayfaAdi() + '" SSS: "' + b + '" komple silindi');
+      if (window.avrasyaDegisiklikKaydet) {
+        window.avrasyaDegisiklikKaydet("Sık Sorulan Sorular • Soru Komple Silindi", b + " — " + a, "(silindi)");
+      }
+    });
+    item.querySelector(".sss-soru").appendChild(sil);
+  }
 
   document.querySelectorAll(".sss-liste").forEach(function (liste) {
     var ekle = document.createElement("div");
@@ -103,6 +133,7 @@
 
       liste.insertBefore(item, ekle);
       bagla(item.querySelector(".sss-soru"));
+      silButonuEkle(item);
 
       var cevap = item.querySelector(".sss-cevap");
       cevap.style.maxHeight = cevap.scrollHeight + "px";

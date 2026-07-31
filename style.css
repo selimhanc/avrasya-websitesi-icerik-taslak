@@ -855,6 +855,25 @@ section {
   color: var(--beyaz);
 }
 
+.sss-sil {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: #c0392b;
+  color: var(--beyaz);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.sss-sil:hover {
+  background: #a93226;
+}
+
 .sss-cevap {
   max-height: 0;
   overflow: hidden;
@@ -963,10 +982,8 @@ section {
 
 /* ---------- DEĞİŞİKLİK PANELİ ---------- */
 .duzen-mod-btn {
-  position: fixed;
-  top: 14px;
-  right: 14px;
-  z-index: 9999;
+  margin-left: auto;
+  align-self: center;
   padding: 8px 14px;
   border: 1px solid var(--gri-acik);
   border-radius: 999px;
@@ -998,7 +1015,6 @@ section {
   cursor: pointer;
   transition: background 0.2s;
   flex-shrink: 0;
-  align-self: flex-start;
 }
 
 .deg-panel-baslik .whatsapp-paylas:hover {
@@ -1016,6 +1032,7 @@ body:not(.duzenleme-acik) .gorsel-ata,
 body:not(.duzenleme-acik) .gorsel-sil,
 body:not(.duzenleme-acik) .gorsel-ekle,
 body:not(.duzenleme-acik) .sss-ekle,
+body:not(.duzenleme-acik) .sss-sil,
 body:not(.duzenleme-acik) .step-ekle,
 body:not(.duzenleme-acik) .step-tasi,
 body:not(.duzenleme-acik) .step-sil,
@@ -1084,6 +1101,18 @@ body.panel-acik {
   border-bottom: 1px solid var(--gri-acik);
   font-size: 0.85rem;
   color: #5c6f7a;
+}
+
+.deg-panel-baslik > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.deg-aksiyon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .deg-hepsi-kopyala {
@@ -1351,7 +1380,7 @@ body.panel-acik {
 
   .menu-toggle {
     display: inline-flex;
-    margin-left: auto;
+    margin-left: 6px;
   }
 
   .main-nav {
