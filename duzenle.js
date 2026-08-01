@@ -76,6 +76,11 @@
     return Array.prototype.indexOf.call(imgs, img) + 1;
   }
 
+  function sssTabAdi(el) {
+    var liste = el.closest(".sss-liste");
+    return liste ? liste.getAttribute("data-tab-ad") || "Genel" : "Genel";
+  }
+
   function konumEtiketi(el) {
     if (el.tagName === "IMG") {
       var tip = "Görsel";
@@ -93,8 +98,8 @@
     else if (el.classList.contains("hero-img-kutu")) tip = "Kapak Görsel Açıklaması";
     else if (el.matches(".section h2")) tip = "Bölüm Başlığı";
     else if (el.classList.contains("giris")) tip = "Giriş Paragrafı";
-    else if (el.classList.contains("sss-metin")) tip = "Soru";
-    else if (el.closest(".sss-cevap")) tip = "Yanıt";
+    else if (el.classList.contains("sss-metin")) tip = sssTabAdi(el) + " • Soru";
+    else if (el.closest(".sss-cevap")) tip = sssTabAdi(el) + " • Yanıt";
     else if (el.closest(".step")) tip = el.tagName === "H3" ? "Planlama Adımı Başlığı" : "Planlama Adımı";
     else if (el.closest(".info-kutu")) tip = el.tagName === "H4" ? "Bilgi Kutusu Başlığı" : "Bilgi Kutusu";
     else if (el.closest(".gallery")) tip = "Galeri Açıklaması";
@@ -747,4 +752,86 @@
   }
 
   document.querySelectorAll(".steps").forEach(stepsHazirla);
+
+  /* ---------- SSS SORU SIRALAMASI ---------- */
+  function sssSiralamaHazirla(liste) {
+    if (liste.dataset.surukleme === "1") return;
+    liste.dataset.surukleme = "1";
+
+    function tabAdi() {
+      return liste.getAttribute("data-tab-ad") || "Genel";
+    }
+
+    function soruSiralamasi() {
+      return Array.prototype.map.call(liste.querySelectorAll(".sss-item"), function (it) {
+        var m = it.querySelector(".sss-metin");
+        return m ? m.textContent.trim() : "(soru yok)";
+      }).join(" > ");
+    }
+
+    function temizle() {
+      Array.prototype.forEach.call(liste.querySelectorAll(".sss-item.surukleniyor"), function (s) {
+        s.classList.remove("surukleniyor");
+      });
+      Array.prototype.forEach.call(liste.querySelectorAll(".sss-item"), function (s) {
+        s.classList.remove("birakma-noktasi");
+      });
+    }
+
+    liste.addEventListener("dragover", function (e) {
+      var suruklenen = liste.querySelector(".sss-item.surukleniyor");
+      if (!suruklenen) return;
+      e.preventDefault();
+      var hedef = e.target.closest ? e.target.closest(".sss-item") : null;
+      Array.prototype.forEach.call(liste.querySelectorAll(".sss-item"), function (s) {
+        s.classList.toggle("birakma-noktasi", s === hedef && s !== suruklenen);
+      });
+    });
+
+    liste.addEventListener("drop", function (e) {
+      var suruklenen = liste.querySelector(".sss-item.surukleniyor");
+      if (!suruklenen) return;
+      e.preventDefault();
+      var hedef = e.target.closest ? e.target.closest(".sss-item") : null;
+      var onceSira = soruSiralamasi();
+      if (hedef && hedef !== suruklenen) {
+        var rect = hedef.getBoundingClientRect();
+        var once = e.clientY < rect.top + rect.height / 2;
+        if (once) liste.insertBefore(suruklenen, hedef);
+        else liste.insertBefore(suruklenen, hedef.nextSibling);
+      }
+      var sonra = soruSiralamasi();
+      if (onceSira !== sonra) {
+        window.avrasyaDegisiklikKaydet("Sık Sorulan Sorular • " + tabAdi() + " • Sıralama", onceSira, sonra);
+      }
+      temizle();
+    });
+
+    liste.addEventListener("dragend", temizle);
+  }
+
+  function sssItemHazirla(item) {
+    if (item.querySelector(".sss-tasi")) return;
+    var tasi = document.createElement("button");
+    tasi.type = "button";
+    tasi.className = "sss-tasi";
+    tasi.title = "Soruyu sürükle";
+    tasi.draggable = true;
+    tasi.innerHTML = ikon('<path d="M9 5h1v1H9V5zm5 0h1v1h-1V5zM9 11h1v1H9v-1zm5 0h1v1h-1v-1zM9 17h1v1H9v-1zm5 0h1v1h-1v-1z"></path>');
+    var soru = item.querySelector(".sss-soru");
+    soru.insertBefore(tasi, soru.firstChild);
+
+    tasi.addEventListener("dragstart", function (e) {
+      if (!modAcik()) { e.preventDefault(); return; }
+      item.classList.add("surukleniyor");
+      e.dataTransfer.effectAllowed = "move";
+      try { e.dataTransfer.setData("text/plain", "sss"); } catch (err) {}
+    });
+  }
+
+  window.avrasyaSssSiralamaHazirla = sssSiralamaHazirla;
+  window.avrasyaSssItemHazirla = sssItemHazirla;
+
+  document.querySelectorAll(".sss-liste").forEach(sssSiralamaHazirla);
+  document.querySelectorAll(".sss-item").forEach(sssItemHazirla);
 })();

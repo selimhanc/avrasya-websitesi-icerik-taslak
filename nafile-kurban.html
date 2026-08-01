@@ -210,16 +210,12 @@
     <div class="container">
       <h2>Sık Sorulan Sorular</h2>
       <p class="giris">Nafile kurban hakkında merak edilenler:</p>
-      <div class="sss-liste">
-        <div class="sss-item">
-          <div class="sss-soru">
-            <span class="sss-metin">Adak kurbanı nedir?</span>
-            <button class="sss-ac" type="button" aria-label="Yanıtı aç" title="Yanıtı aç"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
-          </div>
-          <div class="sss-cevap">
-            <p>Adak kurbanı, bir kişinin Allah'a adak olarak sunduğu bir kurbandır. Bu özel ibadette, adayan kişinin belirli bir niyetle kurban olarak seçtiği sağlıklı bir hayvan kesilir. Adak kurbanı, bireyin Allah'a olan bağlılığını ifade etmek, dualarını, dileklerini veya şükranını sunmak amacıyla gerçekleştirilen manevi değeri yüksek bir ibadettir. Bu ibadet, aynı zamanda toplumsal dayanışmayı ve paylaşmayı teşvik etmektedir.</p>
-          </div>
-        </div>
+      <div class="sss-tablar">
+        <button type="button" class="sss-tab aktif" data-tab-ad="Adak">Adak</button>
+        <button type="button" class="sss-tab" data-tab-ad="Akika">Akika</button>
+        <button type="button" class="sss-tab" data-tab-ad="Genel">Genel</button>
+      </div>
+      <div class="sss-liste" data-tab-ad="Akika" hidden>
         <div class="sss-item">
           <div class="sss-soru">
             <span class="sss-metin">Akika kurbanı nedir, ne zaman kesilir?</span>
@@ -229,6 +225,8 @@
             <p>Akika; yeni doğan bebek için şükür niyetiyle kesilen kurbandır ve doğumun yedinci gününden itibaren kesilebilir.</p>
           </div>
         </div>
+      </div>
+      <div class="sss-liste" data-tab-ad="Genel" hidden>
         <div class="sss-item">
           <div class="sss-soru">
             <span class="sss-metin">Nafile kurban ile bayram kurbanı arasındaki fark nedir?</span>
@@ -265,6 +263,8 @@
             <p>Kesim esnasında kaydedilen video ve dağıtım bilgileri bağışçıyla paylaşılır.</p>
           </div>
         </div>
+      </div>
+      <div class="sss-liste" data-tab-ad="Adak" hidden>
         <div class="sss-item">
           <div class="sss-soru">
             <span class="sss-metin">Adak Kurbanı Şartları Nelerdir?</span>
@@ -333,6 +333,15 @@ Herkes: Adak etini, adak adayan kişi ve usul ile furu'u (yani kendisinin üst s
 Adak adamak, ciddiyet gerektiren bir taahhüttür ve kişi bu taahhüdünü yerine getirmekle yükümlüdür. Adak adayan kişi, bu ibadeti yerine getirme konusunda titizlik göstermeli ve İslam'ın öngördüğü usullere uygun olarak adak kurbanı kesmelidir.<br>
 Ancak, adak adamak herkes için zorunlu değildir. Kişi, kendi inancı ve isteği doğrultusunda adak adamaya karar verebilir. Adak adayan kişinin, ibadetin ciddiyetini anlaması ve adak kurbanının gerekliliklerini yerine getirmesi önemlidir.<br>
 Sonuç olarak, adak adamak kişinin kendi inancına ve iradesine bağlı bir karardır. İslam dininde adak adamak meşru bir ibadet olarak kabul edilir, ancak bu kararı veren kişinin ciddiyetle taahhüdünü yerine getirmesi önemlidir.</p>
+          </div>
+        </div>
+        <div class="sss-item">
+          <div class="sss-soru">
+            <span class="sss-metin">Adak kurbanı nedir?</span>
+            <button class="sss-ac" type="button" aria-label="Yanıtı aç" title="Yanıtı aç"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+          </div>
+          <div class="sss-cevap">
+            <p>Adak kurbanı, bir kişinin Allah'a adak olarak sunduğu bir kurbandır. Bu özel ibadette, adayan kişinin belirli bir niyetle kurban olarak seçtiği sağlıklı bir hayvan kesilir. Adak kurbanı, bireyin Allah'a olan bağlılığını ifade etmek, dualarını, dileklerini veya şükranını sunmak amacıyla gerçekleştirilen manevi değeri yüksek bir ibadettir. Bu ibadet, aynı zamanda toplumsal dayanışmayı ve paylaşmayı teşvik etmektedir.</p>
           </div>
         </div>
       </div>
