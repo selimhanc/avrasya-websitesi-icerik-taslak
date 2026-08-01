@@ -266,6 +266,8 @@
   /* ---------- GÖRSEL İŞLEMLERİ ---------- */
   var hedefImg = null;
   var ekleGaleri = null;
+  var hedefHero = null;
+  var hedefGalBolum = null;
 
   var popup = document.createElement("div");
   popup.className = "gorsel-popup";
@@ -290,6 +292,40 @@
       if (s && adaylar.indexOf(s) === -1) adaylar.push(s);
     });
     return adaylar;
+  }
+
+  function listeyiDoldur(srcListesi, secili) {
+    popupListe.innerHTML = "";
+    if (!srcListesi.length) {
+      var bos = document.createElement("p");
+      bos.className = "gorsel-popup-bos";
+      bos.textContent = "Bu bölümde görsel bulunamadı. Medya klasörüne görsel eklendikçe burada listelenecektir.";
+      popupListe.appendChild(bos);
+      return;
+    }
+    var sayfadakiler = sayfadakiGorseller();
+    srcListesi.forEach(function (src) {
+      var kucuk = document.createElement("img");
+      kucuk.src = src;
+      kucuk.alt = "Görsel seçenekleri";
+      if (src === secili) {
+        kucuk.className = "secili";
+      } else if (sayfadakiler.indexOf(src) !== -1) {
+        kucuk.className = "kullaniliyor";
+      }
+      kucuk.addEventListener("click", function () {
+        if (hedefHero) {
+          kapakSetEt(hedefHero, src);
+        } else if (hedefGalBolum) {
+          galeriBosEkle(hedefGalBolum, src);
+        } else if (hedefImg) {
+          gorselDegistir(hedefImg, src);
+        } else {
+          gorselEkle(src);
+        }
+      });
+      popupListe.appendChild(kucuk);
+    });
   }
 
   function gorselListesiCek(klasor) {
@@ -346,30 +382,8 @@
 
     var secili = img ? img.getAttribute("src") : null;
 
-    function listeyiDoldur(srcListesi) {
-      popupListe.innerHTML = "";
-      srcListesi.forEach(function (src) {
-        var kucuk = document.createElement("img");
-        kucuk.src = src;
-        kucuk.alt = "Görsel seçenekleri";
-        if (src === secili) {
-          kucuk.className = "secili";
-        } else if (sayfadakiler.indexOf(src) !== -1) {
-          kucuk.className = "kullaniliyor";
-        }
-        kucuk.addEventListener("click", function () {
-          if (hedefImg) {
-            gorselDegistir(hedefImg, src);
-          } else {
-            gorselEkle(src);
-          }
-        });
-        popupListe.appendChild(kucuk);
-      });
-    }
-
     popup.classList.add("acik");
-    listeyiDoldur(sayfadakiler);
+    listeyiDoldur(sayfadakiler, secili);
 
     if (hedefKlasor) {
       gorselListesiCek(hedefKlasor).then(function (adlar) {
@@ -388,8 +402,12 @@
 
   function popupKapat() {
     popup.classList.remove("acik");
+    var baslik = popup.querySelector(".gorsel-popup-baslik span");
+    if (baslik) baslik.textContent = "Görsel Seçin";
     hedefImg = null;
     ekleGaleri = null;
+    hedefHero = null;
+    hedefGalBolum = null;
   }
 
   function gorselDegistir(img, yeniSrc) {
@@ -422,9 +440,9 @@
 
     fig.appendChild(img);
     fig.appendChild(cap);
-    gorselButonlariEkle(fig, img, true);
 
     galeri.insertBefore(fig, galeri.querySelector(".gorsel-ekle"));
+    gorselButonlariEkle(fig, img, true);
     kayitPanoyaEkle("Galeri • Yeni Görsel (" + galeriIndex(img) + ")", "(yok)", src);
     popupKapat();
   }
@@ -602,6 +620,178 @@
       popupAc(null);
     });
     galeri.appendChild(ekle);
+  });
+
+  /* ---------- KAPAK / GALERİ GÖRSELİ EKLE (BANNER'SI OMAYAN SAYFALAR) ---------- */
+  function faaliyetKlasoru() {
+    try {
+      var ad = location.pathname.split("/").pop().replace(/\.html?$/, "");
+      if (ad) return "medya/" + ad;
+    } catch (e) {}
+    var eslesme = null;
+    document.querySelectorAll(".gallery img, .hero-img img, .kart-gorsel img").forEach(function (i) {
+      if (eslesme) return;
+      var s = i.getAttribute("src");
+      if (s) eslesme = /^(medya\/[^/]+)\//.exec(s) || eslesme;
+    });
+    return eslesme ? eslesme[1] : null;
+  }
+
+  function faaliyetPopupAc(tip, hedef) {
+    if (!modAcik()) return;
+    if (tip === "kapak") hedefHero = hedef;
+    else hedefGalBolum = hedef;
+
+    var baslik = popup.querySelector(".gorsel-popup-baslik span");
+    if (baslik) baslik.textContent = tip === "kapak" ? "Kapak Görseli Seçin" : "Galeri Görseli Seçin";
+
+    var klasor = faaliyetKlasoru();
+    var sayfadakiler = sayfadakiGorseller();
+
+    popup.classList.add("acik");
+    listeyiDoldur(sayfadakiler, null);
+
+    if (klasor) {
+      gorselListesiCek(klasor).then(function (adlar) {
+        if (!adlar || !popup.classList.contains("acik")) return;
+        var hepsi = [];
+        adlar.forEach(function (ad) {
+          hepsi.push(klasor + "/" + ad);
+        });
+        sayfadakiler.forEach(function (src) {
+          if (hepsi.indexOf(src) === -1) hepsi.push(src);
+        });
+        listeyiDoldur(hepsi, null);
+      });
+    }
+  }
+
+  function kapakSetEt(hero, src) {
+    var eski = hero.style.getPropertyValue("--hero-bg") || "(yok)";
+    hero.style.setProperty("--hero-bg", "url('" + src.replace(/'/g, "\\'") + "')");
+
+    var kutu = hero.querySelector(".container");
+    var heroImg = hero.querySelector(".hero-img");
+
+    if (!heroImg) {
+      if (kutu && !kutu.classList.contains("hero-flex")) {
+        kutu.classList.add("hero-flex");
+        var metin = kutu.querySelector(".hero-metin");
+        if (!metin) {
+          metin = document.createElement("div");
+          metin.className = "hero-metin";
+          var cocuklar = Array.prototype.slice.call(kutu.children);
+          cocuklar.forEach(function (c) {
+            if (c !== metin) metin.appendChild(c);
+          });
+          kutu.insertBefore(metin, kutu.firstChild);
+        }
+      }
+      heroImg = document.createElement("div");
+      heroImg.className = "hero-img";
+      var img = document.createElement("img");
+      img.src = src;
+      img.alt = "Kapak görseli";
+      img.addEventListener("click", function () {
+        popupAc(img);
+      });
+      var cap = document.createElement("span");
+      cap.className = "hero-img-kutu";
+      cap.textContent = "Kapak görseli";
+      editeBagla(cap);
+      heroImg.appendChild(img);
+      heroImg.appendChild(cap);
+      gorselButonlariEkle(heroImg, img, false);
+      if (kutu) kutu.appendChild(heroImg);
+      else hero.appendChild(heroImg);
+    } else {
+      var img = heroImg.querySelector("img");
+      if (img) img.setAttribute("src", src);
+    }
+
+    var ekleBtn = hero.querySelector(".kapak-ekle");
+    if (ekleBtn) ekleBtn.remove();
+    kayitPanoyaEkle("Sayfa • Kapak Görseli", eski, src);
+    popupKapat();
+  }
+
+  function galeriBosEkle(bolum, src) {
+    var container = bolum.querySelector(".container") || bolum;
+    var galeri = document.createElement("div");
+    galeri.className = "gallery";
+
+    var fig = document.createElement("figure");
+    var img = document.createElement("img");
+    img.src = src;
+    img.alt = "Galeri görseli";
+    img.addEventListener("click", function () {
+      popupAc(img);
+    });
+    var cap = document.createElement("figcaption");
+    cap.textContent = "Yeni eklenen görsel";
+    fig.appendChild(img);
+    fig.appendChild(cap);
+    galeri.appendChild(fig);
+    gorselButonlariEkle(fig, img, true);
+
+    var ekleBtn = document.createElement("button");
+    ekleBtn.type = "button";
+    ekleBtn.className = "gorsel-ekle";
+    ekleBtn.textContent = "+ Yeni Görsel Ekle";
+    ekleBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      ekleGaleri = galeri;
+      popupAc(null);
+    });
+    galeri.appendChild(ekleBtn);
+
+    var giris = container.querySelector(".giris");
+    if (giris && giris.nextSibling) container.insertBefore(galeri, giris.nextSibling);
+    else container.appendChild(galeri);
+
+    var ekle = bolum.querySelector(".galeri-bos-ekle");
+    if (ekle) ekle.remove();
+    kayitPanoyaEkle("Galeri • Yeni Görsel (1)", "(yok)", src + " — " + cap.textContent);
+    popupKapat();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".hero"), function (hero) {
+    if (hero.querySelector(".hero-img")) return;
+    var sayfaAdi = null;
+    try {
+      sayfaAdi = location.pathname.split("/").pop().replace(/\.html?$/, "");
+    } catch (e) {}
+    if (!sayfaAdi || sayfaAdi === "index") return;
+
+    var ekle = document.createElement("button");
+    ekle.type = "button";
+    ekle.className = "kapak-ekle";
+    ekle.textContent = "Kapak Görseli Ekle";
+    ekle.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      faaliyetPopupAc("kapak", hero);
+    });
+    hero.appendChild(ekle);
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".section#galeri"), function (bolum) {
+    if (bolum.querySelector(".gallery")) return;
+
+    var ekle = document.createElement("button");
+    ekle.type = "button";
+    ekle.className = "galeri-bos-ekle";
+    ekle.textContent = "Galeri Görseli Ekle";
+    ekle.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      faaliyetPopupAc("galeri", bolum);
+    });
+    var container = bolum.querySelector(".container") || bolum;
+    var giris = container.querySelector(".giris");
+    if (giris && giris.nextSibling) container.insertBefore(ekle, giris.nextSibling);
+    else container.appendChild(ekle);
   });
 
   /* ---------- DÜZENLENEBİLİR ÖĞELER ---------- */
