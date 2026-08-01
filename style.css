@@ -798,6 +798,14 @@ section {
 }
 
 /* ---------- SIK SORULAN SORULAR ---------- */
+.sss-liste-baslik {
+  margin: 30px 0 12px;
+  font-size: 1.05rem;
+  color: var(--mavi);
+  border-bottom: 2px solid var(--gri-acik);
+  padding-bottom: 6px;
+}
+
 .sss-tablar {
   display: flex;
   flex-wrap: wrap;

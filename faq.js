@@ -86,6 +86,14 @@
   }
 
   function listeHazirla(liste) {
+    if (!liste.querySelector(".sss-liste-baslik")) {
+      var baslik = document.createElement("h3");
+      baslik.className = "sss-liste-baslik";
+      baslik.textContent = tabAdi(liste);
+      baslik.hidden = true;
+      liste.insertBefore(baslik, liste.firstChild);
+    }
+
     var ekle = document.createElement("div");
     ekle.className = "sss-ekle";
     ekle.innerHTML =
@@ -166,6 +174,22 @@
     var tumu = ad === "Tümü";
     Array.prototype.forEach.call(sssBolum.querySelectorAll(".sss-liste"), function (l) {
       l.hidden = tumu ? false : l.getAttribute("data-tab-ad") !== ad;
+      var b = l.querySelector(".sss-liste-baslik");
+      if (b) b.hidden = !tumu;
+    });
+  }
+
+  function listeleriSırala(sssBolum) {
+    var tablar = sssBolum.querySelector(".sss-tablar");
+    if (!tablar) return;
+    var sira = [];
+    Array.prototype.forEach.call(tablar.querySelectorAll(".sss-tab"), function (t) {
+      var ad = t.getAttribute("data-tab-ad");
+      if (ad !== "Tümü") sira.push(ad);
+    });
+    sira.forEach(function (ad) {
+      var l = sssBolum.querySelector('.sss-liste[data-tab-ad="' + ad + '"]');
+      if (l) tablar.parentNode.appendChild(l);
     });
   }
 
@@ -250,6 +274,7 @@
       }
       if (window.avrasyaSssSeciciYenile) window.avrasyaSssSeciciYenile();
       geneliIlkYap(tablar);
+      listeleriSırala(sssBolum);
       var ilk = tablar.querySelector(".sss-tab");
       if (ilk) tabGoster(sssBolum, ilk.getAttribute("data-tab-ad"));
     });
@@ -268,6 +293,7 @@
     });
 
     geneliIlkYap(tablar);
+    listeleriSırala(sssBolum);
 
     var ekle = document.createElement("button");
     ekle.type = "button";
@@ -294,6 +320,7 @@
       tabDropHazirla(sssBolum, tabBtn);
       tablar.insertBefore(tabBtn, ekle);
       geneliIlkYap(tablar);
+      listeleriSırala(sssBolum);
 
       var liste = document.createElement("div");
       liste.className = "sss-liste";
