@@ -932,6 +932,20 @@ section {
   cursor: grabbing;
 }
 
+.sss-tab-sec {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border: 1px solid var(--gri-acik);
+  border-radius: 999px;
+  background: var(--zemin);
+  color: var(--mavi);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  max-width: 140px;
+}
+
 .sss-item:hover .sss-tasi,
 .sss-tasi:hover {
   opacity: 1;
@@ -1153,6 +1167,7 @@ body:not(.duzenleme-acik) .gorsel-ekle,
 body:not(.duzenleme-acik) .sss-ekle,
 body:not(.duzenleme-acik) .sss-sil,
 body:not(.duzenleme-acik) .sss-tasi,
+body:not(.duzenleme-acik) .sss-tab-sec,
 body:not(.duzenleme-acik) .sss-tab-ekle,
 body:not(.duzenleme-acik) .sss-tab-sil,
 body:not(.duzenleme-acik) .step-ekle,

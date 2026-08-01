@@ -778,6 +778,17 @@
       });
     }
 
+    function hedefiKonumaGoreBul(e, suruklenen) {
+      var itemler = liste.querySelectorAll(".sss-item");
+      var once = null;
+      Array.prototype.forEach.call(itemler, function (it) {
+        if (it === suruklenen) return;
+        var r = it.getBoundingClientRect();
+        if (e.clientY < r.top + r.height / 2 && !once) once = it;
+      });
+      return once;
+    }
+
     liste.addEventListener("dragover", function (e) {
       var suruklenen = liste.querySelector(".sss-item.surukleniyor");
       if (!suruklenen) return;
@@ -792,13 +803,17 @@
       var suruklenen = liste.querySelector(".sss-item.surukleniyor");
       if (!suruklenen) return;
       e.preventDefault();
-      var hedef = e.target.closest ? e.target.closest(".sss-item") : null;
       var onceSira = soruSiralamasi();
+      var hedef = e.target.closest ? e.target.closest(".sss-item") : null;
       if (hedef && hedef !== suruklenen) {
         var rect = hedef.getBoundingClientRect();
         var once = e.clientY < rect.top + rect.height / 2;
         if (once) liste.insertBefore(suruklenen, hedef);
         else liste.insertBefore(suruklenen, hedef.nextSibling);
+      } else if (!hedef) {
+        var goreli = hedefiKonumaGoreBul(e, suruklenen);
+        if (goreli) liste.insertBefore(suruklenen, goreli);
+        else liste.insertBefore(suruklenen, liste.querySelector(".sss-ekle"));
       }
       var sonra = soruSiralamasi();
       if (onceSira !== sonra) {
@@ -808,6 +823,26 @@
     });
 
     liste.addEventListener("dragend", temizle);
+  }
+
+  function sssSeciciDoldur(sec) {
+    var item = sec.closest(".sss-item");
+    var mevcut = item ? item.closest(".sss-liste").getAttribute("data-tab-ad") || "Genel" : "Genel";
+    var secili = sec.value || mevcut;
+    sec.innerHTML = "";
+    var tablar = document.querySelectorAll(".sss-tab");
+    Array.prototype.forEach.call(tablar, function (t) {
+      var ad = t.getAttribute("data-tab-ad");
+      var opt = document.createElement("option");
+      opt.value = ad;
+      opt.textContent = ad;
+      sec.appendChild(opt);
+    });
+    sec.value = secili;
+  }
+
+  function sssSeciciYenile() {
+    document.querySelectorAll(".sss-tab-sec").forEach(sssSeciciDoldur);
   }
 
   function sssItemHazirla(item) {
@@ -827,10 +862,37 @@
       e.dataTransfer.effectAllowed = "move";
       try { e.dataTransfer.setData("text/plain", "sss"); } catch (err) {}
     });
+
+    var sec = document.createElement("select");
+    sec.className = "sss-tab-sec";
+    sec.title = "Soruyu başka sekmeye taşı";
+    soru.insertBefore(sec, soru.querySelector(".sss-ac"));
+    sssSeciciDoldur(sec);
+    sec.addEventListener("change", function () {
+      if (!modAcik()) return;
+      var hedefAd = sec.value;
+      var kaynakListe = item.closest(".sss-liste");
+      var kaynakAd = kaynakListe ? kaynakListe.getAttribute("data-tab-ad") || "Genel" : "Genel";
+      if (hedefAd === kaynakAd) return;
+      var hedefListe = document.querySelector('.sss-liste[data-tab-ad="' + hedefAd + '"]');
+      if (!hedefListe) return;
+      var soruMetni = item.querySelector(".sss-metin");
+      var metin = soruMetni ? soruMetni.textContent.trim() : "(soru yok)";
+      hedefListe.insertBefore(item, hedefListe.querySelector(".sss-ekle"));
+      sssSeciciDoldur(sec);
+      window.avrasyaDegisiklikKaydet("Sık Sorulan Sorular • Soru Sekmeye Taşındı", kaynakAd + " — " + metin, hedefAd + " — " + metin);
+      if (hedefListe.hidden) {
+        Array.prototype.forEach.call(document.querySelectorAll(".sss-tab"), function (t) {
+          if (t.getAttribute("data-tab-ad") === hedefAd) t.click();
+        });
+      }
+    });
+    soru.insertBefore(sec, soru.querySelector(".sss-ac"));
   }
 
   window.avrasyaSssSiralamaHazirla = sssSiralamaHazirla;
   window.avrasyaSssItemHazirla = sssItemHazirla;
+  window.avrasyaSssSeciciYenile = sssSeciciYenile;
 
   document.querySelectorAll(".sss-liste").forEach(sssSiralamaHazirla);
   document.querySelectorAll(".sss-item").forEach(sssItemHazirla);

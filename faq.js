@@ -191,6 +191,7 @@
       if (window.avrasyaDegisiklikKaydet) {
         window.avrasyaDegisiklikKaydet("Sık Sorulan Sorular • Tab Silindi", ad + " (" + n + " soru)", "(silindi)");
       }
+      if (window.avrasyaSssSeciciYenile) window.avrasyaSssSeciciYenile();
       var ilk = tablar.querySelector(".sss-tab");
       if (ilk) tabGoster(sssBolum, ilk.getAttribute("data-tab-ad"));
     });
@@ -242,6 +243,7 @@
       if (window.avrasyaDegisiklikKaydet) {
         window.avrasyaDegisiklikKaydet("Sık Sorulan Sorular • Tab Eklendi", "(yok)", ad);
       }
+      if (window.avrasyaSssSeciciYenile) window.avrasyaSssSeciciYenile();
     });
     tablar.appendChild(ekle);
 
