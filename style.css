@@ -830,6 +830,24 @@ section {
   color: var(--beyaz);
 }
 
+.sss-tab.surukleniyor {
+  outline: 2px dashed var(--turuncu);
+  outline-offset: 2px;
+  border-color: var(--turuncu);
+  color: var(--turuncu);
+}
+
+.sss-tab-tumu {
+  border-color: var(--turuncu);
+  color: var(--turuncu);
+}
+
+.sss-tab-tumu.aktif {
+  background: var(--turuncu);
+  border-color: var(--turuncu);
+  color: var(--beyaz);
+}
+
 .sss-tab-sil {
   position: absolute;
   top: -8px;

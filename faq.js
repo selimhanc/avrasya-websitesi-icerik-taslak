@@ -163,9 +163,66 @@
     Array.prototype.forEach.call(tablar.querySelectorAll(".sss-tab"), function (t) {
       t.classList.toggle("aktif", t.getAttribute("data-tab-ad") === ad);
     });
+    var tumu = ad === "Tümü";
     Array.prototype.forEach.call(sssBolum.querySelectorAll(".sss-liste"), function (l) {
-      l.hidden = l.getAttribute("data-tab-ad") !== ad;
+      l.hidden = tumu ? false : l.getAttribute("data-tab-ad") !== ad;
     });
+  }
+
+  function tabDropHazirla(sssBolum, tab) {
+    var ad = tab.getAttribute("data-tab-ad");
+    tab.addEventListener("dragover", function (e) {
+      if (!document.body.classList.contains("duzenleme-acik")) return;
+      if (!document.querySelector(".sss-item.surukleniyor")) return;
+      e.preventDefault();
+      tab.classList.add("surukleniyor");
+    });
+    tab.addEventListener("dragleave", function () {
+      tab.classList.remove("surukleniyor");
+    });
+    tab.addEventListener("drop", function (e) {
+      tab.classList.remove("surukleniyor");
+      if (!document.body.classList.contains("duzenleme-acik")) return;
+      var soru = document.querySelector(".sss-item.surukleniyor");
+      if (!soru) return;
+      e.preventDefault();
+      var kaynakListe = soru.closest(".sss-liste");
+      var kaynakAd = kaynakListe ? kaynakListe.getAttribute("data-tab-ad") || "Genel" : "Genel";
+      if (ad === kaynakAd || ad === "Tümü") return;
+      var hedefListe = sssBolum.querySelector('.sss-liste[data-tab-ad="' + ad + '"]');
+      if (!hedefListe) return;
+      var m = soru.querySelector(".sss-metin");
+      var metin = m ? m.textContent.trim() : "(soru yok)";
+      hedefListe.insertBefore(soru, hedefListe.querySelector(".sss-ekle"));
+      soru.classList.remove("surukleniyor");
+      Array.prototype.forEach.call(document.querySelectorAll(".sss-item.birakma-noktasi"), function (s) {
+        s.classList.remove("birakma-noktasi");
+      });
+      if (window.avrasyaSssSeciciYenile) window.avrasyaSssSeciciYenile();
+      if (window.avrasyaDegisiklikKaydet) {
+        window.avrasyaDegisiklikKaydet("Sık Sorulan Sorular • Soru Sekmeye Taşındı", kaynakAd + " — " + metin, ad + " — " + metin);
+      }
+      tabGoster(sssBolum, ad);
+    });
+  }
+
+  function tumuButonuEkle(sssBolum, tablar) {
+    if (tablar.querySelector('.sss-tab[data-tab-ad="Tümü"]')) return;
+    var tumu = document.createElement("button");
+    tumu.type = "button";
+    tumu.className = "sss-tab sss-tab-tumu";
+    tumu.setAttribute("data-tab-ad", "Tümü");
+    tumu.textContent = "Tümü";
+    tablar.insertBefore(tumu, tablar.firstChild);
+    tabDropHazirla(sssBolum, tumu);
+  }
+
+  function geneliIlkYap(tablar) {
+    var tumu = tablar.querySelector('.sss-tab[data-tab-ad="Tümü"]');
+    var genel = tablar.querySelector('.sss-tab[data-tab-ad="Genel"]');
+    if (!tumu || !genel) return;
+    if (genel.previousElementSibling === tumu) return;
+    tablar.insertBefore(genel, tumu.nextSibling);
   }
 
   function tabSilButonuEkle(sssBolum, tab) {
@@ -192,6 +249,7 @@
         window.avrasyaDegisiklikKaydet("Sık Sorulan Sorular • Tab Silindi", ad + " (" + n + " soru)", "(silindi)");
       }
       if (window.avrasyaSssSeciciYenile) window.avrasyaSssSeciciYenile();
+      geneliIlkYap(tablar);
       var ilk = tablar.querySelector(".sss-tab");
       if (ilk) tabGoster(sssBolum, ilk.getAttribute("data-tab-ad"));
     });
@@ -202,9 +260,14 @@
     var tablar = sssBolum.querySelector(".sss-tablar");
     if (!tablar) return;
 
+    tumuButonuEkle(sssBolum, tablar);
+
     Array.prototype.forEach.call(tablar.querySelectorAll(".sss-tab"), function (tab) {
       tabSilButonuEkle(sssBolum, tab);
+      tabDropHazirla(sssBolum, tab);
     });
+
+    geneliIlkYap(tablar);
 
     var ekle = document.createElement("button");
     ekle.type = "button";
@@ -228,7 +291,9 @@
       tabBtn.setAttribute("data-tab-ad", ad);
       tabBtn.textContent = ad;
       tabSilButonuEkle(sssBolum, tabBtn);
+      tabDropHazirla(sssBolum, tabBtn);
       tablar.insertBefore(tabBtn, ekle);
+      geneliIlkYap(tablar);
 
       var liste = document.createElement("div");
       liste.className = "sss-liste";

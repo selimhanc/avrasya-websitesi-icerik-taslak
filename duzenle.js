@@ -938,6 +938,7 @@
     var tablar = document.querySelectorAll(".sss-tab");
     Array.prototype.forEach.call(tablar, function (t) {
       var ad = t.getAttribute("data-tab-ad");
+      if (ad === "Tümü") return;
       var opt = document.createElement("option");
       opt.value = ad;
       opt.textContent = ad;
